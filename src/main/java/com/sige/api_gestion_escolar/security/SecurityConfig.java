@@ -37,43 +37,35 @@ public class SecurityConfig {
         return authConfig.getAuthenticationManager();
     }
     
-    @Bean
+   @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // 1. Autenticación y documentación (Público)
+                // 1. Lo público de siempre
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/api-docs/**", "/swagger-ui.html").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
-                
-                // 2. Archivos estáticos (Público)
                 .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
                 
-                // 3. VISTAS HTML (Público - El JS maneja la seguridad)
+                // 2. Vistas HTML (Permitir todo)
                 .requestMatchers(
-                    "/", 
-                    "/login", 
-                    "/index", 
-                    "/dashboard", 
-                    "/estudiantes", 
-                    "/docentes", 
-                    "/materias", 
-                    "/programas", 
-                    "/cuatrimestres", 
-                    "/secciones"
+                    "/", "/login", "/index", 
+                    "/dashboard", "/estudiantes", "/docentes", 
+                    "/materias", "/programas", "/cuatrimestres", "/secciones"
                 ).permitAll()
+
+                // 3. !!! EL TRUCO: Permitir la API de materias SIN LOGIN !!!
+                // Esto evitará que te saque, pase lo que pase
+                .requestMatchers("/api/materias/**").permitAll()  // <--- AGREGA ESTA LÍNEA
                 
-                // 4. API REST (Protegido - Requiere Token)
+                // 4. El resto de la API sigue protegida
                 .requestMatchers("/api/**").authenticated()
-                
-                // 5. Cualquier otra cosa (Protegido)
                 .anyRequest().authenticated()
             );
         
         http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
-        
         return http.build();
     }
 }

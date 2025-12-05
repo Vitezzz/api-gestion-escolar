@@ -14,16 +14,16 @@
                 <strong id="usernameDisplay"></strong>
                 <span id="roleDisplay"></span>
             </div>
-            <a href="/dashboard" class="sidebar-item">Dashboard</a>
-            <a href="/cuatrimestres" class="sidebar-item">Cuatrimestres</a>
-            <a href="/programas" class="sidebar-item">Programas</a>
-            <a href="/materias" class="sidebar-item">Materias</a>
-            <a href="/estudiantes" class="sidebar-item">Estudiantes</a>
-            <a href="/docentes" class="sidebar-item active">Docentes</a>
-            <a href="/secciones" class="sidebar-item">Secciones</a>
+            <a href="/dashboard" class="sidebar-item"><span>📊</span><span>Dashboard</span></a>
+            <a href="/cuatrimestres" class="sidebar-item"><span>📅</span><span>Cuatrimestres</span></a>
+            <a href="/programas" class="sidebar-item"><span>📚</span><span>Programas</span></a>
+            <a href="/materias" class="sidebar-item"><span>📖</span><span>Materias</span></a>
+            <a href="/estudiantes" class="sidebar-item"><span>👨‍🎓</span><span>Estudiantes</span></a>
+            <a href="/docentes" class="sidebar-item active"><span>👨‍🏫</span><span>Docentes</span></a>
+            <a href="/secciones" class="sidebar-item"><span>🏫</span><span>Secciones</span></a>
             <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.3);">
                 <div class="sidebar-item" onclick="logout()" style="background: rgba(255,0,0,0.2);">
-                    Salir
+                    <span>🚪</span><span>Salir</span>
                 </div>
             </div>
         </div>
@@ -31,18 +31,18 @@
         <div class="main-content">
             <div class="page-header">
                 <div>
-                    <h1 class="page-title">Gestion de Docentes</h1>
-                    <p class="page-subtitle">Administracion de personal docente</p>
+                    <h1 class="page-title">👨‍🏫 Gestión de Docentes</h1>
+                    <p class="page-subtitle">Administración de personal docente</p>
                 </div>
                 <button class="xp-button xp-button-primary" onclick="mostrarFormularioNuevo()">
-                    Nuevo Docente
+                    ➕ Nuevo Docente
                 </button>
             </div>
             
             <div class="table-container">
                 <div class="table-header">
                     <h3 style="margin: 0; font-size: 12px;">Docentes Registrados</h3>
-                    <button class="xp-button" onclick="cargarDocentes()">Actualizar</button>
+                    <button class="xp-button" onclick="cargarDocentes()">🔄 Actualizar</button>
                 </div>
                 
                 <table class="xp-table">
@@ -50,7 +50,7 @@
                         <tr>
                             <th>Nombre</th>
                             <th>Email</th>
-                            <th>Telefono</th>
+                            <th>Teléfono</th>
                             <th>Departamento</th>
                             <th>Estado</th>
                             <th>Acciones</th>
@@ -67,10 +67,10 @@
     <div class="form-modal" id="formModal">
         <div class="xp-window" style="width: 500px;">
             <div class="xp-titlebar">
-                <div class="xp-titlebar-icon"></div>
+                <div class="xp-titlebar-icon">👨‍🏫</div>
                 <div class="xp-titlebar-text" id="modalTitle">Nuevo Docente</div>
                 <div class="xp-titlebar-buttons">
-                    <div class="xp-titlebar-button close" onclick="cerrarFormulario()">X</div>
+                    <div class="xp-titlebar-button close" onclick="cerrarFormulario()">✕</div>
                 </div>
             </div>
             <div class="xp-window-content">
@@ -101,7 +101,7 @@
                     <div class="xp-form-row">
                         <div class="xp-form-col">
                             <div class="xp-form-group">
-                                <label class="xp-form-label">Telefono:</label>
+                                <label class="xp-form-label">Teléfono:</label>
                                 <input type="text" class="xp-input" id="telefono">
                             </div>
                         </div>
@@ -119,11 +119,16 @@
                     </div>
                     <div class="form-buttons">
                         <button type="button" class="xp-button" onclick="cerrarFormulario()">Cancelar</button>
-                        <button type="submit" class="xp-button xp-button-primary">Guardar</button>
+                        <button type="submit" class="xp-button xp-button-primary">💾 Guardar</button>
                     </div>
                 </form>
             </div>
         </div>
+    </div>
+    
+    <div class="taskbar">
+        <div class="start-button"><div class="windows-logo"></div><span>Inicio</span></div>
+        <div class="taskbar-time" id="taskbarTime"></div>
     </div>
 
     <script src="/js/common.js"></script>
@@ -145,7 +150,7 @@
         function renderTabla(data) {
             const tbody = document.getElementById('docentesTable');
             if (!data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-state-text">No hay docentes registrados</div></div></td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">👨‍🏫</div><div class="empty-state-text">No hay docentes registrados</div></div></td></tr>';
                 return;
             }
             tbody.innerHTML = data.map(d => `
@@ -157,8 +162,8 @@
                     <td>${d.activo ? '<span class="status-badge status-activo">Activo</span>' : '<span class="status-badge status-inactivo">Inactivo</span>'}</td>
                     <td>
                         <div class="action-buttons">
-                            <button class="xp-button btn-edit" onclick="editar(${d.id})">Editar</button>
-                            <button class="xp-button btn-delete" onclick="eliminar(${d.id})">Eliminar</button>
+                            <button class="xp-button btn-edit" onclick="editar(${d.id})" title="Editar">✏️</button>
+                            <button class="xp-button btn-delete" onclick="eliminar(${d.id})" title="Eliminar">🗑️</button>
                         </div>
                     </td>
                 </tr>
@@ -210,20 +215,22 @@
             showLoader();
             const result = id ? await apiPut(`/docentes/${id}`, data) : await apiPost('/docentes', data);
             hideLoader();
+            
             if (result) {
-                showSuccess(id ? 'Actualizado correctamente' : 'Creado correctamente');
+                showSuccess(id ? 'Docente actualizado correctamente' : 'Docente creado correctamente');
                 cerrarFormulario();
                 cargarDocentes();
             }
+            // Si result es null, el error ya se mostró en apiPost/apiPut
         });
         
         function eliminar(id) {
-            confirmAction('Confirmar eliminacion del docente?', async () => {
+            confirmAction('¿Está seguro de eliminar este docente?', async () => {
                 showLoader();
                 const result = await apiDelete(`/docentes/${id}`);
                 hideLoader();
                 if (result) {
-                    showSuccess('Eliminado correctamente');
+                    showSuccess('Docente eliminado correctamente');
                     cargarDocentes();
                 }
             });

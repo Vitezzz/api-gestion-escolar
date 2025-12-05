@@ -14,16 +14,16 @@
                 <strong id="usernameDisplay"></strong>
                 <span id="roleDisplay"></span>
             </div>
-            <a href="/dashboard" class="sidebar-item">Dashboard</a>
-            <a href="/cuatrimestres" class="sidebar-item">Cuatrimestres</a>
-            <a href="/programas" class="sidebar-item">Programas</a>
-            <a href="/materias" class="sidebar-item active">Materias</a>
-            <a href="/estudiantes" class="sidebar-item">Estudiantes</a>
-            <a href="/docentes" class="sidebar-item">Docentes</a>
-            <a href="/secciones" class="sidebar-item">Secciones</a>
+            <a href="/dashboard" class="sidebar-item"><span>📊</span><span>Dashboard</span></a>
+            <a href="/cuatrimestres" class="sidebar-item"><span>📅</span><span>Cuatrimestres</span></a>
+            <a href="/programas" class="sidebar-item"><span>📚</span><span>Programas</span></a>
+            <a href="/materias" class="sidebar-item active"><span>📖</span><span>Materias</span></a>
+            <a href="/estudiantes" class="sidebar-item"><span>👨‍🎓</span><span>Estudiantes</span></a>
+            <a href="/docentes" class="sidebar-item"><span>👨‍🏫</span><span>Docentes</span></a>
+            <a href="/secciones" class="sidebar-item"><span>🏫</span><span>Secciones</span></a>
             <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.3);">
                 <div class="sidebar-item" onclick="logout()" style="background: rgba(255,0,0,0.2);">
-                    Salir
+                    <span>🚪</span><span>Salir</span>
                 </div>
             </div>
         </div>
@@ -31,26 +31,26 @@
         <div class="main-content">
             <div class="page-header">
                 <div>
-                    <h1 class="page-title">Gestion de Materias</h1>
-                    <p class="page-subtitle">Catalogo de asignaturas</p>
+                    <h1 class="page-title">📖 Gestión de Materias</h1>
+                    <p class="page-subtitle">Catálogo de asignaturas</p>
                 </div>
                 <button class="xp-button xp-button-primary" onclick="mostrarFormularioNuevo()">
-                    Nueva Materia
+                    ➕ Nueva Materia
                 </button>
             </div>
             
             <div class="table-container">
                 <div class="table-header">
                     <h3 style="margin: 0; font-size: 12px;">Materias Registradas</h3>
-                    <button class="xp-button" onclick="cargarMaterias()">Actualizar</button>
+                    <button class="xp-button" onclick="cargarMaterias()">🔄 Actualizar</button>
                 </div>
                 
                 <table class="xp-table">
                     <thead>
                         <tr>
-                            <th>Codigo</th>
+                            <th>Código</th>
                             <th>Nombre</th>
-                            <th>Creditos</th>
+                            <th>Créditos</th>
                             <th>Departamento</th>
                             <th>Estado</th>
                             <th>Acciones</th>
@@ -67,10 +67,10 @@
     <div class="form-modal" id="formModal">
         <div class="xp-window" style="width: 600px;">
             <div class="xp-titlebar">
-                <div class="xp-titlebar-icon"></div>
+                <div class="xp-titlebar-icon">📖</div>
                 <div class="xp-titlebar-text" id="modalTitle">Nueva Materia</div>
                 <div class="xp-titlebar-buttons">
-                    <div class="xp-titlebar-button close" onclick="cerrarFormulario()">X</div>
+                    <div class="xp-titlebar-button close" onclick="cerrarFormulario()">✕</div>
                 </div>
             </div>
             <div class="xp-window-content">
@@ -79,163 +79,168 @@
                     <div class="xp-form-row">
                         <div class="xp-form-col">
                             <div class="xp-form-group">
-                                <label class="xp-form-label">Codigo:*</label>
+                                <label class="xp-form-label">Código:*</label>
                                 <input type="text" class="xp-input" id="codigo" required>
                             </div>
-                        </div>
-                        <div class="xp-form-col">
-                            <div class="xp-form-group">
-                                <label class="xp-form-label">Creditos:*</label>
-                                <input type="number" class="xp-input" id="creditos" min="1" required>
                             </div>
+                    <div class="xp-form-col">
+                        <div class="xp-form-group">
+                            <label class="xp-form-label">Créditos:*</label>
+                            <input type="number" class="xp-input" id="creditos" min="1" required>
                         </div>
                     </div>
-                    <div class="xp-form-group">
-                        <label class="xp-form-label">Nombre:*</label>
-                        <input type="text" class="xp-input" id="nombre" required>
-                    </div>
-                    <div class="xp-form-row">
-                        <div class="xp-form-col">
-                            <div class="xp-form-group">
-                                <label class="xp-form-label">Horas Teoria:</label>
-                                <input type="number" class="xp-input" id="horasTeoria" min="0">
-                            </div>
-                        </div>
-                        <div class="xp-form-col">
-                            <div class="xp-form-group">
-                                <label class="xp-form-label">Horas Practica:</label>
-                                <input type="number" class="xp-input" id="horasPractica" min="0">
-                            </div>
+                </div>
+                <div class="xp-form-group">
+                    <label class="xp-form-label">Nombre:*</label>
+                    <input type="text" class="xp-input" id="nombre" required>
+                </div>
+                <div class="xp-form-row">
+                    <div class="xp-form-col">
+                        <div class="xp-form-group">
+                            <label class="xp-form-label">Horas Teoría:</label>
+                            <input type="number" class="xp-input" id="horasTeoria" min="0">
                         </div>
                     </div>
-                    <div class="xp-form-group">
-                        <label class="xp-form-label">ID Departamento:</label>
-                        <input type="number" class="xp-input" id="departamentoId" placeholder="ID numerico">
+                    <div class="xp-form-col">
+                        <div class="xp-form-group">
+                            <label class="xp-form-label">Horas Práctica:</label>
+                            <input type="number" class="xp-input" id="horasPractica" min="0">
+                        </div>
                     </div>
-                    <div class="xp-form-group">
-                        <label class="xp-form-label">Descripcion:</label>
-                        <textarea class="xp-textarea" id="descripcion" rows="2"></textarea>
-                    </div>
-                    <div class="xp-form-group">
-                        <label class="xp-form-label">
-                            <input type="checkbox" id="activo" checked> Activo
-                        </label>
-                    </div>
-                    <div class="form-buttons">
-                        <button type="button" class="xp-button" onclick="cerrarFormulario()">Cancelar</button>
-                        <button type="submit" class="xp-button xp-button-primary">Guardar</button>
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class="xp-form-group">
+                    <label class="xp-form-label">ID Departamento:</label>
+                    <input type="number" class="xp-input" id="departamentoId" placeholder="ID numérico">
+                </div>
+                <div class="xp-form-group">
+                    <label class="xp-form-label">Descripción:</label>
+                    <textarea class="xp-textarea" id="descripcion" rows="2"></textarea>
+                </div>
+                <div class="xp-form-group">
+                    <label class="xp-form-label">
+                        <input type="checkbox" id="activo" checked> Activo
+                    </label>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="xp-button" onclick="cerrarFormulario()">Cancelar</button>
+                    <button type="submit" class="xp-button xp-button-primary">💾 Guardar</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
-    <script src="/js/common.js"></script>
-    <script>
-        if (!checkAuth()) window.location.href = '/login';
-        const userInfo = loadUserInfo();
-        document.getElementById('usernameDisplay').textContent = userInfo.username;
-        document.getElementById('roleDisplay').textContent = userInfo.roles.join(', ');
+<div class="taskbar">
+    <div class="start-button"><div class="windows-logo"></div><span>Inicio</span></div>
+    <div class="taskbar-time" id="taskbarTime"></div>
+</div>
+
+<script src="/js/common.js"></script>
+<script>
+    if (!checkAuth()) window.location.href = '/login';
+    const userInfo = loadUserInfo();
+    document.getElementById('usernameDisplay').textContent = userInfo.username;
+    document.getElementById('roleDisplay').textContent = userInfo.roles.join(', ');
+    
+    let materias = [];
+    
+    async function cargarMaterias() {
+        showLoader();
+        materias = await apiGet('/materias');
+        hideLoader();
+        if (materias) renderTabla(materias);
+    }
+    
+    function renderTabla(data) {
+        const tbody = document.getElementById('materiasTable');
+        if (!data || data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">📖</div><div class="empty-state-text">No hay materias registradas</div></div></td></tr>';
+            return;
+        }
+        tbody.innerHTML = data.map(m => `
+            <tr>
+                <td><strong>${m.codigo}</strong></td>
+                <td>${m.nombre}</td>
+                <td class="text-center">${m.creditos}</td>
+                <td>${m.departamentoNombre || '-'}</td>
+                <td>${m.activo ? '<span class="status-badge status-activo">Activo</span>' : '<span class="status-badge status-inactivo">Inactivo</span>'}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="xp-button btn-edit" onclick="editar(${m.id})" title="Editar">✏️</button>
+                        <button class="xp-button btn-delete" onclick="eliminar(${m.id})" title="Eliminar">🗑️</button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+    
+    function mostrarFormularioNuevo() {
+        document.getElementById('modalTitle').textContent = 'Nueva Materia';
+        document.getElementById('materiaForm').reset();
+        document.getElementById('materiaId').value = '';
+        document.getElementById('activo').checked = true;
+        document.getElementById('formModal').classList.add('show');
+    }
+    
+    function editar(id) {
+        const m = materias.find(x => x.id === id);
+        if (!m) return;
+        document.getElementById('modalTitle').textContent = 'Editar Materia';
+        document.getElementById('materiaId').value = m.id;
+        document.getElementById('codigo').value = m.codigo;
+        document.getElementById('nombre').value = m.nombre;
+        document.getElementById('creditos').value = m.creditos;
+        document.getElementById('horasTeoria').value = m.horasTeoria || 0;
+        document.getElementById('horasPractica').value = m.horasPractica || 0;
+        document.getElementById('departamentoId').value = m.departamentoId || '';
+        document.getElementById('descripcion').value = m.descripcion || '';
+        document.getElementById('activo').checked = m.activo;
+        document.getElementById('formModal').classList.add('show');
+    }
+    
+    function cerrarFormulario() {
+        document.getElementById('formModal').classList.remove('show');
+    }
+    
+    document.getElementById('materiaForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('materiaId').value;
+        const depId = document.getElementById('departamentoId').value;
         
-        let materias = [];
+        const data = {
+            codigo: document.getElementById('codigo').value,
+            nombre: document.getElementById('nombre').value,
+            creditos: parseInt(document.getElementById('creditos').value),
+            horasTeoria: parseInt(document.getElementById('horasTeoria').value) || 0,
+            horasPractica: parseInt(document.getElementById('horasPractica').value) || 0,
+            departamentoId: depId ? parseInt(depId) : null,
+            descripcion: document.getElementById('descripcion').value,
+            activo: document.getElementById('activo').checked
+        };
         
-        async function cargarMaterias() {
+        showLoader();
+        const result = id ? await apiPut(`/materias/${id}`, data) : await apiPost('/materias', data);
+        hideLoader();
+        
+        if (result) {
+            showSuccess(id ? 'Materia actualizada correctamente' : 'Materia creada correctamente');
+            cerrarFormulario();
+            cargarMaterias();
+        }
+        // Si result es null, el error ya se mostró en apiPost/apiPut
+    });
+    
+    function eliminar(id) {
+        confirmAction('¿Está seguro de eliminar esta materia?', async () => {
             showLoader();
-            materias = await apiGet('/materias');
-            hideLoader();
-            if (materias) renderTabla(materias);
-        }
-        
-        function renderTabla(data) {
-            const tbody = document.getElementById('materiasTable');
-            if (!data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-state-text">No hay materias registradas</div></div></td></tr>';
-                return;
-            }
-            tbody.innerHTML = data.map(m => `
-                <tr>
-                    <td><strong>${m.codigo}</strong></td>
-                    <td>${m.nombre}</td>
-                    <td class="text-center">${m.creditos}</td>
-                    <td>${m.departamentoNombre || '-'}</td>
-                    <td>${m.activo ? '<span class="status-badge status-activo">Activo</span>' : '<span class="status-badge status-inactivo">Inactivo</span>'}</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="xp-button btn-edit" onclick="editar(${m.id})">Editar</button>
-                            <button class="xp-button btn-delete" onclick="eliminar(${m.id})">Eliminar</button>
-                        </div>
-                    </td>
-                </tr>
-            `).join('');
-        }
-        
-        function mostrarFormularioNuevo() {
-            document.getElementById('modalTitle').textContent = 'Nueva Materia';
-            document.getElementById('materiaForm').reset();
-            document.getElementById('materiaId').value = '';
-            document.getElementById('activo').checked = true;
-            document.getElementById('formModal').classList.add('show');
-        }
-        
-        function editar(id) {
-            const m = materias.find(x => x.id === id);
-            if (!m) return;
-            document.getElementById('modalTitle').textContent = 'Editar Materia';
-            document.getElementById('materiaId').value = m.id;
-            document.getElementById('codigo').value = m.codigo;
-            document.getElementById('nombre').value = m.nombre;
-            document.getElementById('creditos').value = m.creditos;
-            document.getElementById('horasTeoria').value = m.horasTeoria || 0;
-            document.getElementById('horasPractica').value = m.horasPractica || 0;
-            document.getElementById('departamentoId').value = m.departamentoId || '';
-            document.getElementById('descripcion').value = m.descripcion || '';
-            document.getElementById('activo').checked = m.activo;
-            document.getElementById('formModal').classList.add('show');
-        }
-        
-        function cerrarFormulario() {
-            document.getElementById('formModal').classList.remove('show');
-        }
-        
-        document.getElementById('materiaForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('materiaId').value;
-            const depId = document.getElementById('departamentoId').value;
-            
-            const data = {
-                codigo: document.getElementById('codigo').value,
-                nombre: document.getElementById('nombre').value,
-                creditos: parseInt(document.getElementById('creditos').value),
-                horasTeoria: parseInt(document.getElementById('horasTeoria').value) || 0,
-                horasPractica: parseInt(document.getElementById('horasPractica').value) || 0,
-                departamentoId: depId ? parseInt(depId) : null,
-                descripcion: document.getElementById('descripcion').value,
-                activo: document.getElementById('activo').checked
-            };
-            
-            showLoader();
-            const result = id ? await apiPut(`/materias/${id}`, data) : await apiPost('/materias', data);
+            const result = await apiDelete(`/materias/${id}`);
             hideLoader();
             if (result) {
-                showSuccess(id ? 'Actualizada correctamente' : 'Creada correctamente');
-                cerrarFormulario();
+                showSuccess('Materia eliminada correctamente');
                 cargarMaterias();
             }
         });
-        
-        function eliminar(id) {
-            confirmAction('Confirmar eliminacion de la materia?', async () => {
-                showLoader();
-                const result = await apiDelete(`/materias/${id}`);
-                hideLoader();
-                if (result) {
-                    showSuccess('Eliminada correctamente');
-                    cargarMaterias();
-                }
-            });
-        }
-        
-        cargarMaterias();
-    </script>
-</body>
-</html>
+    }
+    
+    cargarMaterias();
+</script>

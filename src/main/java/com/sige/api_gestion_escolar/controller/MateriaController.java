@@ -43,7 +43,7 @@ public class MateriaController {
     }
     
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN') or hasRole('COORDINADOR')")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('COORDINADOR')")
     @Operation(summary = "Crear nueva materia")
     public ResponseEntity<MateriaDTO> crear(@Valid @RequestBody MateriaDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -51,7 +51,7 @@ public class MateriaController {
     }
     
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('COORDINADOR')")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('COORDINADOR')")
     @Operation(summary = "Actualizar materia")
     public ResponseEntity<MateriaDTO> actualizar(
             @PathVariable Integer id,

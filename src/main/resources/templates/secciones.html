@@ -14,16 +14,16 @@
                 <strong id="usernameDisplay"></strong>
                 <span id="roleDisplay"></span>
             </div>
-            <a href="/dashboard" class="sidebar-item">Dashboard</a>
-            <a href="/cuatrimestres" class="sidebar-item">Cuatrimestres</a>
-            <a href="/programas" class="sidebar-item">Programas</a>
-            <a href="/materias" class="sidebar-item">Materias</a>
-            <a href="/estudiantes" class="sidebar-item">Estudiantes</a>
-            <a href="/docentes" class="sidebar-item">Docentes</a>
-            <a href="/secciones" class="sidebar-item active">Secciones</a>
+            <a href="/dashboard" class="sidebar-item"><span>📊</span><span>Dashboard</span></a>
+            <a href="/cuatrimestres" class="sidebar-item"><span>📅</span><span>Cuatrimestres</span></a>
+            <a href="/programas" class="sidebar-item"><span>📚</span><span>Programas</span></a>
+            <a href="/materias" class="sidebar-item"><span>📖</span><span>Materias</span></a>
+            <a href="/estudiantes" class="sidebar-item"><span>👨‍🎓</span><span>Estudiantes</span></a>
+            <a href="/docentes" class="sidebar-item"><span>👨‍🏫</span><span>Docentes</span></a>
+            <a href="/secciones" class="sidebar-item active"><span>🏫</span><span>Secciones</span></a>
             <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.3);">
                 <div class="sidebar-item" onclick="logout()" style="background: rgba(255,0,0,0.2);">
-                    Salir
+                    <span>🚪</span><span>Salir</span>
                 </div>
             </div>
         </div>
@@ -31,18 +31,18 @@
         <div class="main-content">
             <div class="page-header">
                 <div>
-                    <h1 class="page-title">Gestion de Secciones</h1>
+                    <h1 class="page-title">🏫 Gestión de Secciones</h1>
                     <p class="page-subtitle">Grupos y horarios</p>
                 </div>
                 <button class="xp-button xp-button-primary" onclick="mostrarFormularioNuevo()">
-                    Nueva Seccion
+                    ➕ Nueva Sección
                 </button>
             </div>
             
             <div class="table-container">
                 <div class="table-header">
                     <h3 style="margin: 0; font-size: 12px;">Secciones Registradas</h3>
-                    <button class="xp-button" onclick="cargarSecciones()">Actualizar</button>
+                    <button class="xp-button" onclick="cargarSecciones()">🔄 Actualizar</button>
                 </div>
                 
                 <table class="xp-table">
@@ -68,10 +68,10 @@
     <div class="form-modal" id="formModal">
         <div class="xp-window" style="width: 650px;">
             <div class="xp-titlebar">
-                <div class="xp-titlebar-icon"></div>
-                <div class="xp-titlebar-text" id="modalTitle">Nueva Seccion</div>
+                <div class="xp-titlebar-icon">🏫</div>
+                <div class="xp-titlebar-text" id="modalTitle">Nueva Sección</div>
                 <div class="xp-titlebar-buttons">
-                    <div class="xp-titlebar-button close" onclick="cerrarFormulario()">X</div>
+                    <div class="xp-titlebar-button close" onclick="cerrarFormulario()">✕</div>
                 </div>
             </div>
             <div class="xp-window-content">
@@ -116,7 +116,7 @@
                     <div class="xp-form-row">
                         <div class="xp-form-col">
                             <div class="xp-form-group">
-                                <label class="xp-form-label">Max Alumnos:*</label>
+                                <label class="xp-form-label">Máx Alumnos:*</label>
                                 <input type="number" class="xp-input" id="maxAlumnos" min="1" required>
                             </div>
                         </div>
@@ -157,11 +157,16 @@
                     
                     <div class="form-buttons">
                         <button type="button" class="xp-button" onclick="cerrarFormulario()">Cancelar</button>
-                        <button type="submit" class="xp-button xp-button-primary">Guardar</button>
+                        <button type="submit" class="xp-button xp-button-primary">💾 Guardar</button>
                     </div>
                 </form>
             </div>
         </div>
+    </div>
+    
+    <div class="taskbar">
+        <div class="start-button"><div class="windows-logo"></div><span>Inicio</span></div>
+        <div class="taskbar-time" id="taskbarTime"></div>
     </div>
 
     <script src="/js/common.js"></script>
@@ -173,7 +178,7 @@
         
         let secciones = [];
         
-        // Cargar catalogos para los selects
+        // Cargar catálogos para los selects
         async function cargarCatalogos() {
             const [materias, cuatrimestres, docentes] = await Promise.all([
                 apiGet('/materias/activas'),
@@ -204,7 +209,7 @@
         function renderTabla(data) {
             const tbody = document.getElementById('seccionesTable');
             if (!data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="empty-state-text">No hay secciones registradas</div></div></td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="empty-state-icon">🏫</div><div class="empty-state-text">No hay secciones registradas</div></div></td></tr>';
                 return;
             }
             tbody.innerHTML = data.map(s => `
@@ -217,8 +222,8 @@
                     <td>${getStatusBadge(s.estado)}</td>
                     <td>
                         <div class="action-buttons">
-                            <button class="xp-button btn-edit" onclick="editar(${s.id})">Editar</button>
-                            <button class="xp-button btn-delete" onclick="eliminar(${s.id})">Eliminar</button>
+                            <button class="xp-button btn-edit" onclick="editar(${s.id})" title="Editar">✏️</button>
+                            <button class="xp-button btn-delete" onclick="eliminar(${s.id})" title="Eliminar">🗑️</button>
                         </div>
                     </td>
                 </tr>
@@ -226,7 +231,7 @@
         }
         
         function mostrarFormularioNuevo() {
-            document.getElementById('modalTitle').textContent = 'Nueva Seccion';
+            document.getElementById('modalTitle').textContent = 'Nueva Sección';
             document.getElementById('seccionForm').reset();
             document.getElementById('seccionId').value = '';
             document.getElementById('estado').value = 'ABIERTA';
@@ -237,7 +242,7 @@
         function editar(id) {
             const s = secciones.find(x => x.id === id);
             if (!s) return;
-            document.getElementById('modalTitle').textContent = 'Editar Seccion';
+            document.getElementById('modalTitle').textContent = 'Editar Sección';
             document.getElementById('seccionId').value = s.id;
             document.getElementById('materiaId').value = s.materiaId;
             document.getElementById('cuatrimestreId').value = s.cuatrimestreId;
@@ -276,20 +281,22 @@
             showLoader();
             const result = id ? await apiPut(`/secciones/${id}`, data) : await apiPost('/secciones', data);
             hideLoader();
+            
             if (result) {
-                showSuccess(id ? 'Actualizada correctamente' : 'Creada correctamente');
+                showSuccess(id ? 'Sección actualizada correctamente' : 'Sección creada correctamente');
                 cerrarFormulario();
                 cargarSecciones();
             }
+            // Si result es null, el error ya se mostró en apiPost/apiPut
         });
         
         function eliminar(id) {
-            confirmAction('Confirmar eliminacion de la seccion?', async () => {
+            confirmAction('¿Está seguro de eliminar esta sección?', async () => {
                 showLoader();
                 const result = await apiDelete(`/secciones/${id}`);
                 hideLoader();
                 if (result) {
-                    showSuccess('Eliminada correctamente');
+                    showSuccess('Sección eliminada correctamente');
                     cargarSecciones();
                 }
             });

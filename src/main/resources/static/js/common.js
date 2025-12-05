@@ -1,7 +1,4 @@
-/* ========================================
-   FUNCIONES COMUNES DEL SISTEMA
-   Ubicación: src/main/resources/static/js/common.js
-   ======================================== */
+
 
 // Configuración de la API
 const API_BASE_URL = '/api';
@@ -78,7 +75,15 @@ async function apiPost(endpoint, data) {
             return null;
         }
         
-        return await response.json();
+        const result = await response.json();
+        
+        // Si la respuesta tiene success: false, mostrar error
+        if (result.success === false) {
+            showError(result.message || 'Error al guardar los datos');
+            return null;
+        }
+        
+        return result;
     } catch (error) {
         console.error('Error en POST:', error);
         showError('Error al guardar los datos');
@@ -100,7 +105,15 @@ async function apiPut(endpoint, data) {
             return null;
         }
         
-        return await response.json();
+        const result = await response.json();
+        
+        // Si la respuesta tiene success: false, mostrar error
+        if (result.success === false) {
+            showError(result.message || 'Error al actualizar los datos');
+            return null;
+        }
+        
+        return result;
     } catch (error) {
         console.error('Error en PUT:', error);
         showError('Error al actualizar los datos');
