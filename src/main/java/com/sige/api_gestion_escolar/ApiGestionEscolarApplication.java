@@ -36,8 +36,8 @@ public class ApiGestionEscolarApplication {
         System.out.println("\n========================================");
         System.out.println("Sistema Escolar Cuatrimestral - Iniciado");
         System.out.println("========================================");
-        System.out.println("Swagger UI: http://localhost:8080/swagger-ui.html");
-        System.out.println("API Docs: http://localhost:8080/api-docs");
+        System.out.println("Swagger UI: http://localhost:9090/swagger-ui.html");
+        System.out.println("API Docs: http://localhost:9090/api-docs");
         System.out.println("========================================\n");
     }
 }

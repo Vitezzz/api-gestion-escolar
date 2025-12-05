@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-// ==================== DEPARTAMENTO REPOSITORY ====================
 @Repository
 public interface DepartamentoRepository extends JpaRepository<Departamento, Integer> {
     Optional<Departamento> findByCodigo(String codigo);

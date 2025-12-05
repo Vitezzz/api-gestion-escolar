@@ -14,14 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
-
-
-
-
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider; 
-
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -51,20 +43,32 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // Autenticación
+                // 1. Autenticación y documentación (Público)
                 .requestMatchers("/api/auth/**").permitAll()
-                // Documentación
                 .requestMatchers("/swagger-ui/**", "/api-docs/**", "/swagger-ui.html").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
-                // Archivos estáticos (CSS, JS, imágenes)
+                
+                // 2. Archivos estáticos (Público)
                 .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
-                // Páginas HTML públicas
-                .requestMatchers("/", "/login", "/index").permitAll()
-                // Páginas HTML protegidas
-                .requestMatchers("/dashboard", "/estudiantes", "/docentes", "/materias", 
-                                "/programas", "/cuatrimestres", "/secciones").authenticated()
-                // APIs REST protegidas
+                
+                // 3. VISTAS HTML (Público - El JS maneja la seguridad)
+                .requestMatchers(
+                    "/", 
+                    "/login", 
+                    "/index", 
+                    "/dashboard", 
+                    "/estudiantes", 
+                    "/docentes", 
+                    "/materias", 
+                    "/programas", 
+                    "/cuatrimestres", 
+                    "/secciones"
+                ).permitAll()
+                
+                // 4. API REST (Protegido - Requiere Token)
                 .requestMatchers("/api/**").authenticated()
+                
+                // 5. Cualquier otra cosa (Protegido)
                 .anyRequest().authenticated()
             );
         

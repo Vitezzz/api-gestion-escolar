@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programas - Sistema Escolar</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/components.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="user-info">
+                <strong id="usernameDisplay"></strong>
+                <span id="roleDisplay"></span>
+            </div>
+            <a href="/dashboard" class="sidebar-item">Dashboard</a>
+            <a href="/cuatrimestres" class="sidebar-item">Cuatrimestres</a>
+            <a href="/programas" class="sidebar-item active">Programas</a>
+            <a href="/materias" class="sidebar-item">Materias</a>
+            <a href="/estudiantes" class="sidebar-item">Estudiantes</a>
+            <a href="/docentes" class="sidebar-item">Docentes</a>
+            <a href="/secciones" class="sidebar-item">Secciones</a>
+            <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.3);">
+                <div class="sidebar-item" onclick="logout()" style="background: rgba(255,0,0,0.2);">
+                    Salir
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Gestion de Programas</h1>
+                    <p class="page-subtitle">Administracion de programas academicos</p>
+                </div>
+                <button class="xp-button xp-button-primary" onclick="mostrarFormularioNuevo()">
+                    Nuevo Programa
+                </button>
+            </div>
+            
+            <div class="table-container">
+                <div class="table-header">
+                    <h3 style="margin: 0; font-size: 12px;">Programas Registrados</h3>
+                    <button class="xp-button" onclick="cargarProgramas()">Actualizar</button>
+                </div>
+                
+                <table class="xp-table">
+                    <thead>
+                        <tr>
+                            <th>Clave</th>
+                            <th>Nombre</th>
+                            <th>Duracion (Cuatrimestres)</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="programasTable">
+                        <tr><td colspan="5" class="text-center"><div class="xp-loading"></div> Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-modal" id="formModal">
+        <div class="xp-window" style="width: 500px;">
+            <div class="xp-titlebar">
+                <div class="xp-titlebar-icon"></div>
+                <div class="xp-titlebar-text" id="modalTitle">Nuevo Programa</div>
+                <div class="xp-titlebar-buttons">
+                    <div class="xp-titlebar-button close" onclick="cerrarFormulario()">X</div>
+                </div>
+            </div>
+            <div class="xp-window-content">
+                <form id="programaForm">
+                    <input type="hidden" id="programaId">
+                    <div class="xp-form-row">
+                        <div class="xp-form-col">
+                            <div class="xp-form-group">
+                                <label class="xp-form-label">Clave:*</label>
+                                <input type="text" class="xp-input" id="clave" required>
+                            </div>
+                        </div>
+                        <div class="xp-form-col">
+                            <div class="xp-form-group">
+                                <label class="xp-form-label">Duracion:*</label>
+                                <input type="number" class="xp-input" id="duracionCuatrimestres" min="1" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="xp-form-group">
+                        <label class="xp-form-label">Nombre:*</label>
+                        <input type="text" class="xp-input" id="nombre" required>
+                    </div>
+                    <div class="xp-form-group">
+                        <label class="xp-form-label">Descripcion:</label>
+                        <textarea class="xp-textarea" id="descripcion" rows="3"></textarea>
+                    </div>
+                    <div class="xp-form-group">
+                        <label class="xp-form-label">
+                            <input type="checkbox" id="activo" checked> Activo
+                        </label>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="button" class="xp-button" onclick="cerrarFormulario()">Cancelar</button>
+                        <button type="submit" class="xp-button xp-button-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/common.js"></script>
+    <script>
+        if (!checkAuth()) window.location.href = '/login';
+        const userInfo = loadUserInfo();
+        document.getElementById('usernameDisplay').textContent = userInfo.username;
+        document.getElementById('roleDisplay').textContent = userInfo.roles.join(', ');
+        
+        let programas = [];
+        
+        async function cargarProgramas() {
+            showLoader();
+            programas = await apiGet('/programas');
+            hideLoader();
+            if (programas) renderTabla(programas);
+        }
+        
+        function renderTabla(data) {
+            const tbody = document.getElementById('programasTable');
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="empty-state-text">No hay programas registrados</div></div></td></tr>';
+                return;
+            }
+            tbody.innerHTML = data.map(p => `
+                <tr>
+                    <td><strong>${p.clave}</strong></td>
+                    <td>${p.nombre}</td>
+                    <td class="text-center">${p.duracionCuatrimestres}</td>
+                    <td>${p.activo ? '<span class="status-badge status-activo">Activo</span>' : '<span class="status-badge status-inactivo">Inactivo</span>'}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="xp-button btn-edit" onclick="editar(${p.id})">Editar</button>
+                            <button class="xp-button btn-delete" onclick="eliminar(${p.id})">Eliminar</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function mostrarFormularioNuevo() {
+            document.getElementById('modalTitle').textContent = 'Nuevo Programa';
+            document.getElementById('programaForm').reset();
+            document.getElementById('programaId').value = '';
+            document.getElementById('activo').checked = true;
+            document.getElementById('formModal').classList.add('show');
+        }
+        
+        function editar(id) {
+            const p = programas.find(x => x.id === id);
+            if (!p) return;
+            document.getElementById('modalTitle').textContent = 'Editar Programa';
+            document.getElementById('programaId').value = p.id;
+            document.getElementById('clave').value = p.clave;
+            document.getElementById('nombre').value = p.nombre;
+            document.getElementById('duracionCuatrimestres').value = p.duracionCuatrimestres;
+            document.getElementById('descripcion').value = p.descripcion || '';
+            document.getElementById('activo').checked = p.activo;
+            document.getElementById('formModal').classList.add('show');
+        }
+        
+        function cerrarFormulario() {
+            document.getElementById('formModal').classList.remove('show');
+        }
+        
+        document.getElementById('programaForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('programaId').value;
+            const data = {
+                clave: document.getElementById('clave').value,
+                nombre: document.getElementById('nombre').value,
+                duracionCuatrimestres: parseInt(document.getElementById('duracionCuatrimestres').value),
+                descripcion: document.getElementById('descripcion').value,
+                activo: document.getElementById('activo').checked
+            };
+            showLoader();
+            const result = id ? await apiPut(`/programas/${id}`, data) : await apiPost('/programas', data);
+            hideLoader();
+            if (result) {
+                showSuccess(id ? 'Actualizado correctamente' : 'Creado correctamente');
+                cerrarFormulario();
+                cargarProgramas();
+            }
+        });
+        
+        function eliminar(id) {
+            confirmAction('Confirmar eliminacion del programa?', async () => {
+                showLoader();
+                const result = await apiDelete(`/programas/${id}`);
+                hideLoader();
+                if (result) {
+                    showSuccess('Eliminado correctamente');
+                    cargarProgramas();
+                }
+            });
+        }
+        
+        cargarProgramas();
+    </script>
+</body>
+</html>
