@@ -19,7 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 
 
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider; // <--- Importante
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider; 
+
 
 @Configuration
 @EnableWebSecurity
@@ -38,17 +39,6 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    // === AGREGA ESTE BEAN ===
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        
-        return authProvider;
-    }
     
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
@@ -61,14 +51,22 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
+                // Autenticación
                 .requestMatchers("/api/auth/**").permitAll()
+                // Documentación
                 .requestMatchers("/swagger-ui/**", "/api-docs/**", "/swagger-ui.html").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
+                // Archivos estáticos (CSS, JS, imágenes)
+                .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
+                // Páginas HTML públicas
+                .requestMatchers("/", "/login", "/index").permitAll()
+                // Páginas HTML protegidas
+                .requestMatchers("/dashboard", "/estudiantes", "/docentes", "/materias", 
+                                "/programas", "/cuatrimestres", "/secciones").authenticated()
+                // APIs REST protegidas
+                .requestMatchers("/api/**").authenticated()
                 .anyRequest().authenticated()
             );
-        
-        // Agregar el provider explícitamente (opcional en versiones nuevas, pero recomendado si falla)
-        http.authenticationProvider(authenticationProvider()); 
         
         http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
         

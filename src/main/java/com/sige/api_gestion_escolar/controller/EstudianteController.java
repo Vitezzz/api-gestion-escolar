@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// ==================== ESTUDIANTE CONTROLLER ====================
 @RestController
 @RequestMapping("/api/estudiantes")
 @RequiredArgsConstructor

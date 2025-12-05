@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Escolar - Inicio de Sesión</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/components.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="xp-window login-window">
+            <div class="xp-titlebar">
+                <div class="xp-titlebar-icon">🎓</div>
+                <div class="xp-titlebar-text">Iniciar Sesión - Sistema Escolar</div>
+                <div class="xp-titlebar-buttons">
+                    <div class="xp-titlebar-button">_</div>
+                </div>
+            </div>
+            
+            <div class="login-header">
+                <div class="login-logo">🎓</div>
+                <h2 style="font-size: 14px; margin: 0;">Sistema de Gestión Escolar</h2>
+                <p style="font-size: 11px; color: #666; margin: 4px 0 0 0;">Cuatrimestral</p>
+            </div>
+            
+            <div class="xp-window-content login-form">
+                <div class="error-message" id="errorMessage"></div>
+                
+                <form id="loginForm">
+                    <div class="xp-form-group">
+                        <label class="xp-form-label">Usuario:</label>
+                        <input type="text" class="xp-input" id="username" name="username" 
+                               placeholder="Ingrese su usuario" required autofocus>
+                    </div>
+                    
+                    <div class="xp-form-group">
+                        <label class="xp-form-label">Contraseña:</label>
+                        <input type="password" class="xp-input" id="password" name="password" 
+                               placeholder="Ingrese su contraseña" required>
+                    </div>
+                    
+                    <div class="login-buttons">
+                        <button type="button" class="xp-button" onclick="window.location.href='/'">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="xp-button xp-button-primary">
+                            Aceptar
+                        </button>
+                    </div>
+                </form>
+                
+                <div style="margin-top: 20px; padding-top: 12px; border-top: 1px solid #7F9DB9; font-size: 10px; color: #666;">
+                    <strong>Usuario de prueba:</strong> admin<br>
+                    <strong>Contraseña:</strong> admin123
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Barra de tareas -->
+    <div class="taskbar">
+        <div class="start-button">
+            <div class="windows-logo"></div>
+            <span>Inicio</span>
+        </div>
+        <div class="taskbar-time" id="taskbarTime"></div>
+    </div>
+
+    <script src="/js/common.js"></script>
+    <script>
+        // Manejar login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    sessionStorage.setItem('token', data.token);
+                    sessionStorage.setItem('username', data.username);
+                    sessionStorage.setItem('roles', JSON.stringify(data.roles));
+                    
+                    window.location.href = '/dashboard';
+                } else {
+                    const error = await response.json();
+                    errorMessage.textContent = error.message || 'Usuario o contraseña incorrectos';
+                    errorMessage.classList.add('show');
+                }
+            } catch (error) {
+                errorMessage.textContent = 'Error de conexión. Intente nuevamente.';
+                errorMessage.classList.add('show');
+            }
+        });
+    </script>
+</body>
+</html>

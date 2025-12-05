@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuatrimestres - Sistema Escolar</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/components.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="user-info">
+                <strong id="usernameDisplay"></strong>
+                <span id="roleDisplay"></span>
+            </div>
+            <a href="/dashboard" class="sidebar-item"><span>📊</span><span>Dashboard</span></a>
+            <a href="/cuatrimestres" class="sidebar-item active"><span>📅</span><span>Cuatrimestres</span></a>
+            <a href="/programas" class="sidebar-item"><span>📚</span><span>Programas</span></a>
+            <a href="/materias" class="sidebar-item"><span>📖</span><span>Materias</span></a>
+            <a href="/estudiantes" class="sidebar-item"><span>👨‍🎓</span><span>Estudiantes</span></a>
+            <a href="/docentes" class="sidebar-item"><span>👨‍🏫</span><span>Docentes</span></a>
+            <a href="/secciones" class="sidebar-item"><span>🏫</span><span>Secciones</span></a>
+            <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.3);">
+                <div class="sidebar-item" onclick="logout()" style="background: rgba(255,0,0,0.2);">
+                    <span>🚪</span><span>Salir</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">📅 Gestión de Cuatrimestres</h1>
+                    <p class="page-subtitle">Administración de períodos académicos</p>
+                </div>
+                <button class="xp-button xp-button-primary" onclick="mostrarFormularioNuevo()">
+                    ➕ Nuevo Cuatrimestre
+                </button>
+            </div>
+            
+            <div class="table-container">
+                <div class="table-header">
+                    <h3 style="margin: 0; font-size: 12px;">Cuatrimestres Registrados</h3>
+                    <button class="xp-button" onclick="cargarCuatrimestres()">🔄 Actualizar</button>
+                </div>
+                
+                <table class="xp-table">
+                    <thead>
+                        <tr>
+                            <th>Período</th>
+                            <th>Año</th>
+                            <th>Número</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Fin</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuatrimestresTable">
+                        <tr><td colspan="7" class="text-center"><div class="xp-loading"></div> Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-modal" id="formModal">
+        <div class="xp-window" style="width: 500px;">
+            <div class="xp-titlebar">
+                <div class="xp-titlebar-icon">📅</div>
+                <div class="xp-titlebar-text" id="modalTitle">Nuevo Cuatrimestre</div>
+                <div class="xp-titlebar-buttons">
+                    <div class="xp-titlebar-button close" onclick="cerrarFormulario()">✕</div>
+                </div>
+            </div>
+            <div class="xp-window-content">
+                <form id="cuatrimestreForm">
+                    <input type="hidden" id="cuatrimestreId">
+                    <div class="xp-form-group">
+                        <label class="xp-form-label">Período:*</label>
+                        <input type="text" class="xp-input" id="periodo" placeholder="Ej: 2025-1" required>
+                    </div>
+                    <div class="xp-form-row">
+                        <div class="xp-form-col">
+                            <div class="xp-form-group">
+                                <label class="xp-form-label">Año:*</label>
+                                <input type="number" class="xp-input" id="anio" min="2020" max="2050" required>
+                            </div>
+                        </div>
+                        <div class="xp-form-col">
+                            <div class="xp-form-group">
+                                <label class="xp-form-label">Número (1-3):*</label>
+                                <select class="xp-select" id="numeroCuatrimestre" required>
+                                    <option value="1">1er Cuatrimestre</option>
+                                    <option value="2">2do Cuatrimestre</option>
+                                    <option value="3">3er Cuatrimestre</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="xp-form-row">
+                        <div class="xp-form-col">
+                            <div class="xp-form-group">
+                                <label class="xp-form-label">Fecha Inicio:*</label>
+                                <input type="date" class="xp-input" id="fechaInicio" required>
+                            </div>
+                        </div>
+                        <div class="xp-form-col">
+                            <div class="xp-form-group">
+                                <label class="xp-form-label">Fecha Fin:*</label>
+                                <input type="date" class="xp-input" id="fechaFin" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="xp-form-group">
+                        <label class="xp-form-label">
+                            <input type="checkbox" id="activo" checked> Activo
+                        </label>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="button" class="xp-button" onclick="cerrarFormulario()">Cancelar</button>
+                        <button type="submit" class="xp-button xp-button-primary">💾 Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="taskbar">
+        <div class="start-button"><div class="windows-logo"></div><span>Inicio</span></div>
+        <div class="taskbar-time" id="taskbarTime"></div>
+    </div>
+
+    <script src="/js/common.js"></script>
+    <script>
+        if (!checkAuth()) window.location.href = '/login';
+        const userInfo = loadUserInfo();
+        document.getElementById('usernameDisplay').textContent = userInfo.username;
+        document.getElementById('roleDisplay').textContent = userInfo.roles.join(', ');
+        
+        let cuatrimestres = [];
+        
+        async function cargarCuatrimestres() {
+            showLoader();
+            cuatrimestres = await apiGet('/cuatrimestres');
+            hideLoader();
+            if (cuatrimestres) renderTabla(cuatrimestres);
+        }
+        
+        function renderTabla(data) {
+            const tbody = document.getElementById('cuatrimestresTable');
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="empty-state-icon">📅</div><div class="empty-state-text">No hay cuatrimestres registrados</div></div></td></tr>';
+                return;
+            }
+            tbody.innerHTML = data.map(c => `
+                <tr>
+                    <td><strong>${c.periodo}</strong></td>
+                    <td>${c.anio}</td>
+                    <td class="text-center">${c.numeroCuatrimestre}</td>
+                    <td>${formatDate(c.fechaInicio)}</td>
+                    <td>${formatDate(c.fechaFin)}</td>
+                    <td>${c.activo ? '<span class="status-badge status-activo">Activo</span>' : '<span class="status-badge status-inactivo">Inactivo</span>'}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="xp-button btn-edit" onclick="editar(${c.id})" title="Editar">✏️</button>
+                            <button class="xp-button btn-delete" onclick="eliminar(${c.id})" title="Eliminar">🗑️</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function mostrarFormularioNuevo() {
+            document.getElementById('modalTitle').textContent = 'Nuevo Cuatrimestre';
+            document.getElementById('cuatrimestreForm').reset();
+            document.getElementById('cuatrimestreId').value = '';
+            document.getElementById('activo').checked = true;
+            document.getElementById('formModal').classList.add('show');
+        }
+        
+        function editar(id) {
+            const c = cuatrimestres.find(x => x.id === id);
+            if (!c) return;
+            document.getElementById('modalTitle').textContent = 'Editar Cuatrimestre';
+            document.getElementById('cuatrimestreId').value = c.id;
+            document.getElementById('periodo').value = c.periodo;
+            document.getElementById('anio').value = c.anio;
+            document.getElementById('numeroCuatrimestre').value = c.numeroCuatrimestre;
+            document.getElementById('fechaInicio').value = toInputDate(c.fechaInicio);
+            document.getElementById('fechaFin').value = toInputDate(c.fechaFin);
+            document.getElementById('activo').checked = c.activo;
+            document.getElementById('formModal').classList.add('show');
+        }
+        
+        function cerrarFormulario() {
+            document.getElementById('formModal').classList.remove('show');
+        }
+        
+        document.getElementById('cuatrimestreForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('cuatrimestreId').value;
+            const data = {
+                periodo: document.getElementById('periodo').value,
+                anio: parseInt(document.getElementById('anio').value),
+                numeroCuatrimestre: parseInt(document.getElementById('numeroCuatrimestre').value),
+                fechaInicio: document.getElementById('fechaInicio').value,
+                fechaFin: document.getElementById('fechaFin').value,
+                activo: document.getElementById('activo').checked
+            };
+            showLoader();
+            const result = id ? await apiPut(`/cuatrimestres/${id}`, data) : await apiPost('/cuatrimestres', data);
+            hideLoader();
+            if (result) {
+                showSuccess(id ? 'Actualizado correctamente' : 'Creado correctamente');
+                cerrarFormulario();
+                cargarCuatrimestres();
+            }
+        });
+        
+        function eliminar(id) {
+            confirmAction('¿Eliminar este cuatrimestre?', async () => {
+                showLoader();
+                const result = await apiDelete(`/cuatrimestres/${id}`);
+                hideLoader();
+                if (result) {
+                    showSuccess('Eliminado correctamente');
+                    cargarCuatrimestres();
+                }
+            });
+        }
+        
+        cargarCuatrimestres();
+    </script>
+</body>
+</html>

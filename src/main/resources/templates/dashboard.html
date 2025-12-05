@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sistema Escolar</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/components.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="user-info" id="userInfo">
+                <strong id="usernameDisplay"></strong>
+                <span id="roleDisplay"></span>
+            </div>
+            
+            <a href="/dashboard" class="sidebar-item active">
+                <span>📊</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="/cuatrimestres" class="sidebar-item">
+                <span>📅</span>
+                <span>Cuatrimestres</span>
+            </a>
+            <a href="/programas" class="sidebar-item">
+                <span>📚</span>
+                <span>Programas</span>
+            </a>
+            <a href="/materias" class="sidebar-item">
+                <span>📖</span>
+                <span>Materias</span>
+            </a>
+            <a href="/estudiantes" class="sidebar-item">
+                <span>👨‍🎓</span>
+                <span>Estudiantes</span>
+            </a>
+            <a href="/docentes" class="sidebar-item">
+                <span>👨‍🏫</span>
+                <span>Docentes</span>
+            </a>
+            <a href="/secciones" class="sidebar-item">
+                <span>🏫</span>
+                <span>Secciones</span>
+            </a>
+            
+            <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.3);">
+                <div class="sidebar-item" onclick="logout()" style="background: rgba(255,0,0,0.2);">
+                    <span>🚪</span>
+                    <span>Salir</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contenido Principal -->
+        <div class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">📊 Dashboard</h1>
+                    <p class="page-subtitle">Panel de control del sistema</p>
+                </div>
+            </div>
+            
+            <!-- Tarjetas de estadísticas -->
+            <div class="dashboard-cards" id="statsCards">
+                <div class="dashboard-card">
+                    <div class="dashboard-card-icon">👨‍🎓</div>
+                    <div class="dashboard-card-title">Total Estudiantes</div>
+                    <div class="dashboard-card-value" id="totalEstudiantes">-</div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="dashboard-card-icon">👨‍🏫</div>
+                    <div class="dashboard-card-title">Total Docentes</div>
+                    <div class="dashboard-card-value" id="totalDocentes">-</div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="dashboard-card-icon">📖</div>
+                    <div class="dashboard-card-title">Total Materias</div>
+                    <div class="dashboard-card-value" id="totalMaterias">-</div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="dashboard-card-icon">🏫</div>
+                    <div class="dashboard-card-title">Secciones Activas</div>
+                    <div class="dashboard-card-value" id="totalSecciones">-</div>
+                </div>
+            </div>
+            
+            <!-- Acciones rápidas -->
+            <div class="xp-groupbox">
+                <span class="xp-groupbox-title">Acciones Rápidas</span>
+                <div class="quick-actions">
+                    <div class="quick-action" onclick="window.location.href='/estudiantes'">
+                        <div class="quick-action-icon">➕</div>
+                        <div class="quick-action-text">Nuevo Estudiante</div>
+                    </div>
+                    <div class="quick-action" onclick="window.location.href='/docentes'">
+                        <div class="quick-action-icon">➕</div>
+                        <div class="quick-action-text">Nuevo Docente</div>
+                    </div>
+                    <div class="quick-action" onclick="window.location.href='/secciones'">
+                        <div class="quick-action-icon">➕</div>
+                        <div class="quick-action-text">Nueva Sección</div>
+                    </div>
+                    <div class="quick-action" onclick="window.location.href='/cuatrimestres'">
+                        <div class="quick-action-icon">📅</div>
+                        <div class="quick-action-text">Ver Cuatrimestres</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Información del cuatrimestre actual -->
+            <div class="xp-groupbox">
+                <span class="xp-groupbox-title">Cuatrimestre Actual</span>
+                <div id="cuatrimestreActual">
+                    <div class="xp-loading"></div> Cargando...
+                </div>
+            </div>
+            
+            <!-- Actividad reciente -->
+            <div class="xp-groupbox">
+                <span class="xp-groupbox-title">Actividad Reciente</span>
+                <div class="table-container">
+                    <table class="xp-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Acción</th>
+                                <th>Usuario</th>
+                                <th>Detalles</th>
+                            </tr>
+                        </thead>
+                        <tbody id="actividadReciente">
+                            <tr>
+                                <td colspan="4" class="text-center">
+                                    <div class="empty-state">
+                                        <div class="empty-state-icon">📋</div>
+                                        <div class="empty-state-text">No hay actividad reciente</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Barra de tareas -->
+    <div class="taskbar">
+        <div class="start-button">
+            <div class="windows-logo"></div>
+            <span>Inicio</span>
+        </div>
+        <div class="taskbar-time" id="taskbarTime"></div>
+    </div>
+
+    <script src="/js/common.js"></script>
+    <script>
+        // Verificar autenticación
+        if (!checkAuth()) {
+            window.location.href = '/login';
+        }
+        
+        // Cargar información del usuario
+        const userInfo = loadUserInfo();
+        document.getElementById('usernameDisplay').textContent = userInfo.username;
+        document.getElementById('roleDisplay').textContent = userInfo.roles.join(', ');
+        
+        // Cargar estadísticas
+        async function loadDashboardData() {
+            showLoader();
+            
+            try {
+                // Cargar estudiantes
+                const estudiantes = await apiGet('/estudiantes');
+                if (estudiantes) {
+                    document.getElementById('totalEstudiantes').textContent = estudiantes.length;
+                }
+                
+                // Cargar docentes
+                const docentes = await apiGet('/docentes');
+                if (docentes) {
+                    document.getElementById('totalDocentes').textContent = docentes.length;
+                }
+                
+                // Cargar materias
+                const materias = await apiGet('/materias');
+                if (materias) {
+                    document.getElementById('totalMaterias').textContent = materias.length;
+                }
+                
+                // Cargar secciones
+                const secciones = await apiGet('/secciones');
+                if (secciones) {
+                    const seccionesAbiertas = secciones.filter(s => s.estado === 'ABIERTA');
+                    document.getElementById('totalSecciones').textContent = seccionesAbiertas.length;
+                }
+                
+                // Cargar cuatrimestre actual
+                const cuatrimestres = await apiGet('/cuatrimestres/activos');
+                if (cuatrimestres && cuatrimestres.length > 0) {
+                    const actual = cuatrimestres[0];
+                    document.getElementById('cuatrimestreActual').innerHTML = `
+                        <div class="stats-panel">
+                            <h3 style="margin-bottom: 12px; font-size: 12px;">${actual.periodo}</h3>
+                            <div class="stats-row">
+                                <div class="stat-item">
+                                    <div class="stat-label">Inicio</div>
+                                    <div class="stat-value" style="font-size: 14px;">${formatDate(actual.fechaInicio)}</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Fin</div>
+                                    <div class="stat-value" style="font-size: 14px;">${formatDate(actual.fechaFin)}</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Cuatrimestre</div>
+                                    <div class="stat-value">${actual.numeroCuatrimestre}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('cuatrimestreActual').innerHTML = `
+                        <div class="xp-alert xp-alert-warning">
+                            No hay un cuatrimestre activo configurado
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('Error cargando dashboard:', error);
+                showError('Error al cargar los datos del dashboard');
+            } finally {
+                hideLoader();
+            }
+        }
+        
+        // Cargar datos al iniciar
+        loadDashboardData();
+    </script>
+</body>
+</html>

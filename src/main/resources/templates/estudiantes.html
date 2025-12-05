@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudiantes - Sistema Escolar</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/components.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="user-info" id="userInfo">
+                <strong id="usernameDisplay"></strong>
+                <span id="roleDisplay"></span>
+            </div>
+            
+            <a href="/dashboard" class="sidebar-item">
+                <span>📊</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="/cuatrimestres" class="sidebar-item">
+                <span>📅</span>
+                <span>Cuatrimestres</span>
+            </a>
+            <a href="/programas" class="sidebar-item">
+                <span>📚</span>
+                <span>Programas</span>
+            </a>
+            <a href="/materias" class="sidebar-item">
+                <span>📖</span>
+                <span>Materias</span>
+            </a>
+            <a href="/estudiantes" class="sidebar-item active">
+                <span>👨‍🎓</span>
+                <span>Estudiantes</span>
+            </a>
+            <a href="/docentes" class="sidebar-item">
+                <span>👨‍🏫</span>
+                <span>Docentes</span>
+            </a>
+            <a href="/secciones" class="sidebar-item">
+                <span>🏫</span>
+                <span>Secciones</span>
+            </a>
+            
+            <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.3);">
+                <div class="sidebar-item" onclick="logout()" style="background: rgba(255,0,0,0.2);">
+                    <span>🚪</span>
+                    <span>Salir</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contenido Principal -->
+        <div class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">👨‍🎓 Gestión de Estudiantes</h1>
+                    <p class="page-subtitle">Administración de estudiantes del sistema</p>
+                </div>
+                <button class="xp-button xp-button-primary" onclick="mostrarFormularioNuevo()">
+                    ➕ Nuevo Estudiante
+                </button>
+            </div>
+            
+            <div class="table-container">
+                <div class="table-header">
+                    <div class="table-search">
+                        <input type="text" class="xp-input" id="searchInput" 
+                               placeholder="Buscar por nombre, matrícula o email...">
+                        <button class="xp-button" onclick="buscarEstudiantes()">🔍 Buscar</button>
+                    </div>
+                    <div>
+                        <button class="xp-button" onclick="cargarEstudiantes()">🔄 Actualizar</button>
+                    </div>
+                </div>
+                
+                <table class="xp-table">
+                    <thead>
+                        <tr>
+                            <th>Matrícula</th>
+                            <th>Nombre Completo</th>
+                            <th>Email</th>
+                            <th>Programa</th>
+                            <th>Cuatrimestre</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="estudiantesTable">
+                        <tr>
+                            <td colspan="7" class="text-center">
+                                <div class="xp-loading"></div> Cargando estudiantes...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div id="pagination"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Formulario -->
+    <div class="form-modal" id="formModal">
+        <div class="xp-window" style="width: 600px;">
+            <div class="xp-titlebar">
+                <div class="xp-titlebar-icon">👨‍🎓</div>
+                <div class="xp-titlebar-text" id="modalTitle">Nuevo Estudiante</div>
+                <div class="xp-titlebar-buttons">
+                    <div class="xp-titlebar-button close" onclick="cerrarFormulario()">✕</div>
+                </div>
+            </div>
+            
+            <div class="xp-window-content form-modal-content">
+                <form id="estudianteForm">
+                    <input type="hidden" id="estudianteId">
+                    
+                    <div class="xp-form-row">
+                        <div class="xp-form-col">
+                            <div class="xp-form-group">
+                                <label class="xp-form-label">Matrícula:*</label>
+                                <input type="text" class="xp-input" id="matricula" required>
+                            </div>
+                        </div>
+                        <div class="xp-form-col">
+                            <div class="xp-form-group">
+                                <label class="xp-form-label">Email:*</label>
+                                <input type="email" class="xp-input" id="email" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="xp-form-row">
+                        <div class="xp-form-col">
+                            <div class="xp-form-group">
+                                <label class="xp-form-label">Nombre:*</label>
+                                <input type="text" class="xp-input" id="nombre" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="xp-form-row">
+                        <div class="xp-form-col">
+                            <div class="xp-form-group">
+                                <label class="xp-form-label">Apellido Paterno:*</label>
+                                <input type="text" class="xp-input" id="apellidoPaterno" required>
+                            </div>
+                        </div>
+                        <div class="xp-form-col">
+                            <div class="xp-form-group">
+                                <label class="xp-form-label">Apellido Materno:</label>
+                                <input type="text" class="xp-input" id="apellidoMaterno">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="xp-form-row">
+                        <div class="xp-form-col">
+                            <div class="xp-form-group">
+                                <label class="xp-form-label">Fecha de Nacimiento:</label>
+                                <input type="date" class="xp-input" id="fechaNacimiento">
+                            </div>
+                        </div>
+                        <div class="xp-form-col">
+                            <div class="xp-form-group">
+                                <label class="xp-form-label">Teléfono:</label>
+                                <input type="text" class="xp-input" id="telefono">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="xp-form-row">
+                        <div class="xp-form-col">
+                            <div class="xp-form-group">
+                                <label class="xp-form-label">Programa:*</label>
+                                <select class="xp-select" id="programaId" required>
+                                    <option value="">Seleccione un programa</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="xp-form-col">
+                            <div class="xp-form-group">
+                                <label class="xp-form-label">Fecha de Ingreso:*</label>
+                                <input type="date" class="xp-input" id="fechaIngreso" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="xp-form-row">
+                        <div class="xp-form-col">
+                            <div class="xp-form-group">
+                                <label class="xp-form-label">Cuatrimestre Actual:</label>
+                                <input type="number" class="xp-input" id="cuatrimestreActual" 
+                                       min="1" value="1">
+                            </div>
+                        </div>
+                        <div class="xp-form-col">
+                            <div class="xp-form-group">
+                                <label class="xp-form-label">Estado:</label>
+                                <select class="xp-select" id="status">
+                                    <option value="ACTIVO">ACTIVO</option>
+                                    <option value="INACTIVO">INACTIVO</option>
+                                    <option value="EGRESADO">EGRESADO</option>
+                                    <option value="BAJA">BAJA</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-buttons">
+                        <button type="button" class="xp-button" onclick="cerrarFormulario()">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="xp-button xp-button-primary">
+                            💾 Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Barra de tareas -->
+    <div class="taskbar">
+        <div class="start-button">
+            <div class="windows-logo"></div>
+            <span>Inicio</span>
+        </div>
+        <div class="taskbar-time" id="taskbarTime"></div>
+    </div>
+
+    <script src="/js/common.js"></script>
+    <script>
+        if (!checkAuth()) {
+            window.location.href = '/login';
+        }
+        
+        const userInfo = loadUserInfo();
+        document.getElementById('usernameDisplay').textContent = userInfo.username;
+        document.getElementById('roleDisplay').textContent = userInfo.roles.join(', ');
+        
+        let estudiantes = [];
+        let programas = [];
+        
+        async function cargarProgramas() {
+            programas = await apiGet('/programas/activos');
+            const select = document.getElementById('programaId');
+            select.innerHTML = '<option value="">Seleccione un programa</option>';
+            
+            if (programas) {
+                programas.forEach(programa => {
+                    select.innerHTML += `<option value="${programa.id}">${programa.nombre}</option>`;
+                });
+            }
+        }
+        
+        async function cargarEstudiantes() {
+            showLoader();
+            estudiantes = await apiGet('/estudiantes');
+            hideLoader();
+            
+            if (estudiantes) {
+                renderTabla(estudiantes);
+            } else {
+                document.getElementById('estudiantesTable').innerHTML = `
+                    <tr><td colspan="7" class="text-center">Error al cargar estudiantes</td></tr>
+                `;
+            }
+        }
+        
+        function renderTabla(data) {
+            const tbody = document.getElementById('estudiantesTable');
+            
+            if (!data || data.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">👨‍🎓</div>
+                                <div class="empty-state-text">No hay estudiantes registrados</div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = data.map(est => `
+                <tr>
+                    <td><strong>${est.matricula}</strong></td>
+                    <td>${est.nombre} ${est.apellidoPaterno} ${est.apellidoMaterno || ''}</td>
+                    <td>${est.email}</td>
+                    <td>${est.programaNombre || '-'}</td>
+                    <td class="text-center">${est.cuatrimestreActual || '-'}</td>
+                    <td>${getStatusBadge(est.status)}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="xp-button btn-edit" onclick="editarEstudiante(${est.id})" 
+                                    title="Editar">
+                                ✏️
+                            </button>
+                            <button class="xp-button btn-delete" onclick="eliminarEstudiante(${est.id})" 
+                                    title="Eliminar">
+                                🗑️
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function mostrarFormularioNuevo() {
+            document.getElementById('modalTitle').textContent = 'Nuevo Estudiante';
+            document.getElementById('estudianteForm').reset();
+            document.getElementById('estudianteId').value = '';
+            document.getElementById('formModal').classList.add('show');
+        }
+        
+        async function editarEstudiante(id) {
+            const estudiante = estudiantes.find(e => e.id === id);
+            if (!estudiante) return;
+            
+            document.getElementById('modalTitle').textContent = 'Editar Estudiante';
+            document.getElementById('estudianteId').value = estudiante.id;
+            document.getElementById('matricula').value = estudiante.matricula;
+            document.getElementById('nombre').value = estudiante.nombre;
+            document.getElementById('apellidoPaterno').value = estudiante.apellidoPaterno;
+            document.getElementById('apellidoMaterno').value = estudiante.apellidoMaterno || '';
+            document.getElementById('email').value = estudiante.email;
+            document.getElementById('telefono').value = estudiante.telefono || '';
+            document.getElementById('fechaNacimiento').value = toInputDate(estudiante.fechaNacimiento);
+            document.getElementById('programaId').value = estudiante.programaId || '';
+            document.getElementById('fechaIngreso').value = toInputDate(estudiante.fechaIngreso);
+            document.getElementById('cuatrimestreActual').value = estudiante.cuatrimestreActual || 1;
+            document.getElementById('status').value = estudiante.status || 'ACTIVO';
+            
+            document.getElementById('formModal').classList.add('show');
+        }
+        
+        function cerrarFormulario() {
+            document.getElementById('formModal').classList.remove('show');
+        }
+        
+        document.getElementById('estudianteForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const id = document.getElementById('estudianteId').value;
+            const data = {
+                matricula: document.getElementById('matricula').value,
+                nombre: document.getElementById('nombre').value,
+                apellidoPaterno: document.getElementById('apellidoPaterno').value,
+                apellidoMaterno: document.getElementById('apellidoMaterno').value,
+                email: document.getElementById('email').value,
+                telefono: document.getElementById('telefono').value,
+                fechaNacimiento: document.getElementById('fechaNacimiento').value || null,
+                programaId: parseInt(document.getElementById('programaId').value),
+                fechaIngreso: document.getElementById('fechaIngreso').value,
+                cuatrimestreActual: parseInt(document.getElementById('cuatrimestreActual').value),
+                status: document.getElementById('status').value
+            };
+            
+            showLoader();
+            let result;
+            
+            if (id) {
+                result = await apiPut(`/estudiantes/${id}`, data);
+            } else {
+                result = await apiPost('/estudiantes', data);
+            }
+            
+            hideLoader();
+            
+            if (result) {
+                if (result.success === false) {
+                    showError(result.message);
+                } else {
+                    showSuccess(id ? 'Estudiante actualizado correctamente' : 'Estudiante creado correctamente');
+                    cerrarFormulario();
+                    cargarEstudiantes();
+                }
+            }
+        });
+        
+        function eliminarEstudiante(id) {
+            const estudiante = estudiantes.find(e => e.id === id);
+            if (!estudiante) return;
+            
+            confirmAction(
+                `¿Está seguro de eliminar al estudiante ${estudiante.nombre} ${estudiante.apellidoPaterno}?`,
+                async () => {
+                    showLoader();
+                    const result = await apiDelete(`/estudiantes/${id}`);
+                    hideLoader();
+                    
+                    if (result) {
+                        showSuccess('Estudiante eliminado correctamente');
+                        cargarEstudiantes();
+                    }
+                }
+            );
+        }
+        
+        function buscarEstudiantes() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            if (!searchTerm) {
+                renderTabla(estudiantes);
+                return;
+            }
+            
+            const filtrados = estudiantes.filter(est => 
+                est.matricula.toLowerCase().includes(searchTerm) ||
+                est.nombre.toLowerCase().includes(searchTerm) ||
+                est.apellidoPaterno.toLowerCase().includes(searchTerm) ||
+                est.email.toLowerCase().includes(searchTerm)
+            );
+            
+            renderTabla(filtrados);
+        }
+        
+        document.getElementById('searchInput').addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                buscarEstudiantes();
+            }
+        });
+        
+        // Cargar datos iniciales
+        cargarProgramas();
+        cargarEstudiantes();
+    </script>
+</body>
+</html>

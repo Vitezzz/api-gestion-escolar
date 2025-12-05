@@ -34,12 +34,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         List<GrantedAuthority> authorities = usuario.getUsuarioRoles().stream()
                 .map(usuarioRol -> new SimpleGrantedAuthority("ROLE_" + usuarioRol.getRol().getNombre()))
                 .collect(Collectors.toList());
-
-                // DEBUG TEMPORAL (Borrar después)
-System.out.println("=== DEBUG LOGIN ===");
-System.out.println("Usuario encontrado: " + usuario.getUsername());
-System.out.println("Hash en DB: " + usuario.getPasswordHash());
-System.out.println("===================");
         
         return User.builder()
                 .username(usuario.getUsername())
@@ -49,3 +43,4 @@ System.out.println("===================");
                 .build();
     }
 }
+
